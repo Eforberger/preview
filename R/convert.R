@@ -66,8 +66,11 @@ convertDataByName <- function(df, markers = list("numeric" = "_num", "logical" =
 #'
 #'@return A data frame
 #'@export
-convertDataByDF <- function(df, org)
+convertDataByOrg <- function(df, org)
 {
+    # todo if df is null
+    # todo if org doesn't have the right columns
+
     # Types are: logical, numeric, integer, complex, character, factor
     type_list <- unique(org$type)
     for (type_name in type_list)

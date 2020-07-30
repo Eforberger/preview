@@ -1,3 +1,4 @@
+
 #' T
 #'
 #' Q
@@ -10,8 +11,9 @@
 #'
 #'@return A data frame
 #'@export
-getQuestionName <- function(org, group_name, subgroup_name)
+getNameByOrg <- function(org, group_name, subgroup_name)
 {
+    #print("getQuestionName")
     # if the subgroup started with a number, we put X_ infront of it. We need to remove that now:
     subgroup_name <- stringr::str_replace(subgroup_name, "X_", "")
     #cat("searching for name with group",group_name,"subgroup",subgroup_name,"...")

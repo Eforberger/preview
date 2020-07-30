@@ -14,6 +14,14 @@
 #'@export
 groupData <- function(df, org, group_name, ignore_case = TRUE)
 {
+    #print("groupData")
+    # check that the arguments are valid
+    if (dim(org)[2] < 4)
+    {
+        warning("groupData - the org argument requires at least group, name, subgroup, and category columns.")
+        return(NULL)
+    }
+
     if (ignore_case)
     {
         # convert everything to lower case
@@ -22,8 +30,9 @@ groupData <- function(df, org, group_name, ignore_case = TRUE)
         org$group <- tolower(org$group)
         org$name <- tolower(org$name)
     }
+
     # sort df to get only columns from the group
-    sorted_org <- dplyr::filter(org, .data$group == group_name)
+    sorted_org <- dplyr::filter(org, group == group_name)#.data$group == group_name)
     if (nrow(sorted_org) == 0)
     {
         warning(paste("Could not find any data for group ",group_name,sep=""))
@@ -57,12 +66,12 @@ groupData <- function(df, org, group_name, ignore_case = TRUE)
 #'@param grouped_org
 #'
 #'@importFrom rlang .data
-#'@importFrom dplyr %>%
 #'
 #'@return
 #'@export
 groupDataHelper <- function(category_name, df, grouped_org)
 {
+    #print("groupDataHelper")
     if (ncol(grouped_org) == 0 || nrow(grouped_org) == 0)
     {
         warning("Grouped org has 0 columns or rows. Returning NULL")
@@ -70,6 +79,7 @@ groupDataHelper <- function(category_name, df, grouped_org)
     }
     categorized_grouped_org <- dplyr::filter(grouped_org, .data$category == category_name)
     categorized_df <- dplyr::select(df, dplyr::one_of(categorized_grouped_org$name))
+
     # rename the cols of categorized_df so that they are the name of the supbgroup
     for (colname_index in 1:length(colnames(categorized_df)))
     {
@@ -95,7 +105,7 @@ groupDataHelper <- function(category_name, df, grouped_org)
         b[b ==""] <- NA # possible future error with this setting b to dim(0,0)
         b <- Filter(function(x)!all(is.na(x)),b)
         # make a column named category and give it the value of the category name from the org data frame
-        b <- dplyr::mutate(b, .data$category == category_name)
+        b <- dplyr::mutate(.data = b, category = category_name)
 
     }
     else

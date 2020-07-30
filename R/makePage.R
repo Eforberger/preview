@@ -1,5 +1,3 @@
-
-# TODO make number of columns changeable
 # TODO make filename specificalyb;le
 #' Creates and saves a file of graphs, tables, and text
 #'
@@ -16,27 +14,38 @@
 #'
 #'@return A data frame
 #'@export
-createPage <- function(plot_list, page_title, table_grobs = NULL, tables_height = 6, width = 9, plot_height = 4, unit = "in", columns = 1)
+makePage <- function(plot_list, page_title, table_list = NULL, table_height = 6, width = 9, plot_height = 4, unit = "in", columns = 1, padding = .75)
 {
     if (is.null(plot_list))
     {
         warning("createPage: plot_list argument is NULL. Returning without creating page. Please supply a non-null argument.")
         return(NULL)
     }
+
+    # create plot grobs now that we know we have a list to create them from
     plot_grobs <- gridExtra::arrangeGrob(grobs = plot_list, ncol=columns, width = width) #ERROR: aesthetics length
 
+    # set up heights
+    p_height = plot_height*ceiling(length(plot_list)/columns)
 
-    if (is.null(table_grobs))
+    table_grobs = NULL
+    t_height = 0
+
+    if (!is.null(table_list))#else
     {
-        height = plot_height*ceiling(length(plot_grobs)/columns)
-        g <- gridExtra::arrangeGrob(grobs = list(plot_grobs), ncol=1, heights=unit(c(height),c(unit)), width=unit(c(8),c(unit)), top=page_title)
-    }
-    else
+        # create table grobs, since we know we have a list to create them from.
+        t_height = table_height*length(table_list)
+        table_grobs <- gridExtra::arrangeGrob(grobs = table_list, ncol = 1, width = width, height = t_height, unit = unit)
+        cat("t_height",t_height,"\n")
+        cat("p_height",p_height,"\n")
+        cat("table_list length",length(table_list),"\n")
+        g <- gridExtra::arrangeGrob(grobs = list(table_grobs, plot_grobs), ncol=1, heights=unit(c(t_height, p_height),c(unit, unit)), width=unit(c(width),c(unit)), top=page_title, limitsize = FALSE)
+    }  else
     {
-        height = tables_height + plot_height*ceiling(length(plot_grobs)/columns)
-        g <- gridExtra::arrangeGrob(grobs = list(table_grobs, plot_grobs), ncol=1, heights=unit(c(height),c(unit)), width=unit(c(8),c(unit)), top=page_title)
+        g <- gridExtra::arrangeGrob(grobs = list(plot_grobs), ncol=1, heights=unit(c(p_height),c(unit)), width=unit(c(width),c(unit)), top=page_title, limitsize = FALSE)
     }
+
     fname = paste(page_title,date(),".png",sep="_")
-    ggplot2::ggsave(file=fname, g, dpi = 600, width = width, height = height, units = unit, device = "png")
+    ggplot2::ggsave(file=fname, g, dpi = 300, width = width+padding, height = p_height+t_height+padding, units = unit, device = "png", limitsize = FALSE)
     cat("Scenario",fname, "sucessfully graphed and saved!\n")
 }

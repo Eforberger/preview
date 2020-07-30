@@ -1,45 +1,4 @@
 
-#' T
-#'
-#' Q
-#'
-#'@param group_name TODO
-#'@param subgroup_name TODO
-#'@param linesize TODO
-#'@param org TODO
-#'@param raw_df TODO
-#'@param label_df TODO
-#'
-#'
-#'@return A data frame
-#'@export
-getLabel <- function(group_name, subgroup_name, linesize = 100, org = NULL, raw_df = NULL, label_df = NULL)
-{
-    if (!is.null(label_df))
-    {
-        q <- getLabelByName(label_df, group_name, subgroup_name, linesize)
-    }
-    else
-    {
-        if (!is.null(org) & !is.null(raw_df))
-        {
-            # pull labels from first row of raw qualtrics data
-            labels <- dplyr::top_n(raw_df,1) #TODO - may be error
-            colnames(labels) <- tolower(colnames(labels))
-            # get question name
-            qname <- getQuestionName(org, group_name, subgroup_name)
-            q <- getLabelByName(labels, qname, linesize)
-        }
-        else
-        {
-            warning("Please supply either a raw_df and org or df_label. Returning NOT FOUND for label.")
-            q <- "NOT FOUND"
-        }
-    }
-    return(q)
-}
-
-
 #' Retrieves the label for a graph.
 #'
 #' getLabelByGrouping returns the label for a graph via a data frame that matches each group and subgroup to a string. The data frame has 3 columns minimum - subgroup, group and label.
@@ -56,6 +15,7 @@ getLabel <- function(group_name, subgroup_name, linesize = 100, org = NULL, raw_
 #'@export
 getLabelByGrouping <- function(labels, group_name, subgroup_name, linesize = 100, ...)
 {
+    #print("getLabelByGrouping")
     grouped_lbls <- dplyr::filter(labels, .data$group == group_name)
     lbl <- dplyr::filter(grouped_lbls, .data$subgroup == subgroup_name)$label
     if (is.na(lbl) | is.null(lbl))
@@ -67,11 +27,42 @@ getLabelByGrouping <- function(labels, group_name, subgroup_name, linesize = 100
 
 #' Retrieves the label for a graph.
 #'
-#' getLabelByOrg returns a multi line label containing all questions for all columns with the matching group and subgroup. This is done by first getting the names of all rows with the specified group and subgroup. We then search the data frame labels for columns with the same names. The contents of each column are placed into a list. Once all columns have been found, the list is turned into one big string and returned as the final label.
+#' getAllLabelsByGrouping returns a multi line label containing all questions for all columns with the matching group and subgroup. This is done by first getting the names of all rows with the specified group and subgroup. We then search the data frame labels for columns with the same names. The contents of each column are placed into a list. Once all columns have been found, the list is turned into one big string and returned as the final label.
 #' The idea is that while questions might have the same group and subgroup, they might be phrased differently, and we want to display that difference. For example, "I hate bannanas." and "I hate apples" might both be in the same group and subgroup because we are testing how people feel about fruit - however, the two questions themselves are NOT the same, and we wish to show that.
 #' This function is meant to work with qualtrics data. Qualtrics data contains two extra rows at the top, the first of which contains the question asked to get the data for that column. The idea is that you peel that row off the data, and pass it into getLabelByOrg along with a column name, and will get back the question/label. To change when the label breaks, change the argument linesize.
 #'
-#'#TODO!!!!!!!
+getAllLabelsByGrouping <- function(labels, group_name, subgroup_name, org, linesize = 100, ...)
+{
+    lbl_list <- list()
+
+    # if the subgroup started with a number, we put X_ infront of it. We need to remove that now:
+    subgroup_name <- stringr::str_replace(subgroup_name, "X_", "")
+
+    # get all names in org with the same group and subgroup
+    target_org <- dplyr::filter(org, .data$group == group_name, .data$subgroup == subgroup_name)
+
+    # is target_org null?
+    if (is.null(target_org))
+    {
+        lbl <- "LABEL NOT FOUND"
+    }
+
+    target_org <- dplyr::mutate(target_org, label = "NOT FOUND")
+    for (i in 1:nrow(target_org))
+    {
+        target_org$label[i] <- dplyr::select(labels, matches(target_org$name[i]))[1,1]
+    }
+
+    # remove duplicate labels
+    #lbl_list <- unique(lbl_list)
+
+    # label them with the category they go with
+    for (lbl_i in 1:nrow(target_org))
+    {
+        lbl_list[length(lbl_list)+1] <-  paste(target_org$category[lbl_i],":",strwrap(target_org$label[lbl_i], width = linesize), collapse = "\n")
+    }
+    return(paste(lbl_list, collapse= "\n"))
+}
 
 #' Retrieves the label for a graph.
 #'

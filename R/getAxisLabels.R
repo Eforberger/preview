@@ -10,7 +10,7 @@
 #'
 #'@return A data frame
 #'@export
-getLabelsX <- function(text_df, question_name, label_df = NULL, default = c("-3","-2","-1","0","1","2","3"))
+getAxisLabels <- function(text_df, question_name, label_df = NULL, default = c("-3","-2","-1","0","1","2","3"))
 {
     if (is.null(text_df) | is.null(label_df))
     {

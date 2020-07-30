@@ -1,3 +1,4 @@
+
 #' T
 #'
 #' Q
@@ -7,7 +8,8 @@
 #'
 #'@return A data frame
 #'@export
-getLimitsX <- function(labels, default = -3:3)
+getAxisLimits <- function(labels, default = -3:3)
 {
     return(-3:3)
 }
+
