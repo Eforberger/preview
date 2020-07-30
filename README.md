@@ -17,6 +17,7 @@ Q2 | G2 | Alt | c2 | numeric
 #### Can I have some subgroups in one group and 
 
 ### How is the data grouped?
+![img](https://github.com/Eforberger/preview/misc/grouping_overview.png)
 
 ### What can I customize?
 
