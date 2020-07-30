@@ -12,6 +12,7 @@
 #'@export
 getAxisLabels <- function(text_df, question_name, label_df = NULL, default = c("-3","-2","-1","0","1","2","3"))
 {
+    print("getAxisLabels")
     if (is.null(text_df) | is.null(label_df))
     {
         warning('text_df is NULL. Returning default scale.')

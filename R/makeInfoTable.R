@@ -17,12 +17,12 @@ makeInfoTable <- function(info_src, group_name, use_first_as_row_names = TRUE, c
     }
     else
     {
-        cat("ERROR: No match found for",colname,"\n")
-        return(tableGrob(c("NULL","NULL"),  theme=ttheme_default(base_size = 9)) )
+        warning(paste("makeInfoTable: No info found for",group_name,sep=" "))
+        return(gridExtra::tableGrob(c("NULL","NULL"),  theme=gridExtra::ttheme_default(base_size = 9)) )
     }
 
     title <- grid::textGrob(group_name,gp=grid::gpar(fontsize=12))
-    padding <- unit(5,"mm")
-    tbl <- tableGrob(info_col,  cols = colnames(info_col), rows = info_src[,1],  theme=my_tbl_theme)
+    padding <- grid::unit(5,"mm")
+    tbl <- gridExtra::tableGrob(info_col,  cols = colnames(info_col), rows = info_src[,1],  theme=my_tbl_theme)
     tbl <- gtable::gtable_add_rows(tbl, heights = grid::grobHeight(title) + padding, pos = 0)
 }

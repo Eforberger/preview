@@ -36,7 +36,7 @@ getSummTables<- function(df, org, group_name, width = 9, height = 6, unit = "in"
 
     title_m <- grid::textGrob("Means",gp=grid::gpar(fontsize=9))
     title_s <- grid::textGrob("Standard Deviations",gp=grid::gpar(fontsize=9))
-    padding <- unit(5,"mm")
+    padding <- grid::unit(5,"mm")
 
     mean_tbl <- gtable::gtable_add_rows(mean_tbl, heights = grid::grobHeight(title_m) + padding, pos = 0)
     mean_tbl <- gtable::gtable_add_grob(mean_tbl, title_m, 1, 1, 1, ncol(mean_tbl))

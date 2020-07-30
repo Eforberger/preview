@@ -32,7 +32,7 @@ groupData <- function(df, org, group_name, ignore_case = TRUE)
     }
 
     # sort df to get only columns from the group
-    sorted_org <- dplyr::filter(org, group == group_name)#.data$group == group_name)
+    sorted_org <- dplyr::filter(org, .data$group == group_name)#.data$group == group_name)
     if (nrow(sorted_org) == 0)
     {
         warning(paste("Could not find any data for group ",group_name,sep=""))
@@ -43,10 +43,8 @@ groupData <- function(df, org, group_name, ignore_case = TRUE)
     category_names <- unique(sorted_org$category)
     # then do the lapply thingy!
     x <- lapply(category_names, groupDataHelper, df = sorted_df, grouped_org = sorted_org)
-    #print(x)
     # TODO if the rows don't match up, error
-    #print(lapply(x[[1]],class))
-    #print(lapply(x[[2]],class))
+
     c <- dplyr::bind_rows(x)
     if (is.null(c))
     {

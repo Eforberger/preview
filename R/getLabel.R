@@ -15,7 +15,7 @@
 #'@export
 getLabelByGrouping <- function(labels, group_name, subgroup_name, linesize = 100, ...)
 {
-    #print("getLabelByGrouping")
+    print("getLabelByGrouping")
     grouped_lbls <- dplyr::filter(labels, .data$group == group_name)
     lbl <- dplyr::filter(grouped_lbls, .data$subgroup == subgroup_name)$label
     if (is.na(lbl) | is.null(lbl))
@@ -33,6 +33,7 @@ getLabelByGrouping <- function(labels, group_name, subgroup_name, linesize = 100
 #'
 getAllLabelsByGrouping <- function(labels, group_name, subgroup_name, org, linesize = 100, ...)
 {
+    print("getAllLabelsByGrouping")
     lbl_list <- list()
 
     # if the subgroup started with a number, we put X_ infront of it. We need to remove that now:
@@ -50,7 +51,7 @@ getAllLabelsByGrouping <- function(labels, group_name, subgroup_name, org, lines
     target_org <- dplyr::mutate(target_org, label = "NOT FOUND")
     for (i in 1:nrow(target_org))
     {
-        target_org$label[i] <- dplyr::select(labels, matches(target_org$name[i]))[1,1]
+        target_org$label[i] <- dplyr::select(labels, dplyr::matches(target_org$name[i]))[1,1]
     }
 
     # remove duplicate labels
@@ -76,6 +77,7 @@ getAllLabelsByGrouping <- function(labels, group_name, subgroup_name, org, lines
 #'@export
 getLabelByName <- function(labels, question_name, linesize = 100, ...)
 {
+    print("getLabelByName")
     # find the column in df with the column name question_name from above
     label_index <- match(question_name,colnames(labels), nomatch = -1)
     if (label_index != -1)

@@ -36,9 +36,7 @@ makePage <- function(plot_list, page_title, table_list = NULL, table_height = 6,
         # create table grobs, since we know we have a list to create them from.
         t_height = table_height*length(table_list)
         table_grobs <- gridExtra::arrangeGrob(grobs = table_list, ncol = 1, width = width, height = t_height, unit = unit)
-        cat("t_height",t_height,"\n")
-        cat("p_height",p_height,"\n")
-        cat("table_list length",length(table_list),"\n")
+
         g <- gridExtra::arrangeGrob(grobs = list(table_grobs, plot_grobs), ncol=1, heights=unit(c(t_height, p_height),c(unit, unit)), width=unit(c(width),c(unit)), top=page_title, limitsize = FALSE)
     }  else
     {

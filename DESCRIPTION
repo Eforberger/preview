@@ -18,15 +18,15 @@ Description: Preview allows for quick and easy conversion, grouping, and graphin
     it's category determines how the data on the graph should be grouped. For example, if 
     column 1 and column 2 are both in group X, subgroup A, category 1, the data from each 
     column will be mixed together on the graph. If column 1 is in category 1, and column 2 is in category 2,
-    Then each column will be kept seperate on the graph.
-License: `use_mit_license()`, `use_gpl3_license()` or friends to
-    pick a license
+    then each column will be kept seperate on the graph.
+License: use_gpl3_license()
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
 Imports: 
     dplyr (>= 1.0.0),
+    tidyr,
     tidyverse (>= 1.3.0),
     ggplot2 (>= 3.3.2),
     gridExtra (>= 2.3),

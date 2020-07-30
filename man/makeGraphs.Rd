@@ -9,11 +9,11 @@ makeGraphs(
   org,
   group_name,
   usePercent = TRUE,
-  getAxisLimits = getLimitsX,
-  getAxisLabels = getLabelsX,
-  getGraphLabels = getLabelByName,
+  getXAxisLimits = getAxisLimits,
+  getXAxisLabels = getAxisLabels,
+  getGraphLabels = getLabelByGrouping,
   text_df = NULL,
-  label_df = NULL
+  graph_label_df = NULL
 )
 }
 \arguments{
