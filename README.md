@@ -7,6 +7,14 @@
 - `makePage()` takes in a list of graphs (and optinaly tables/other items) and places them all on one page, then saves it.
 
 ### What is the format of the Organization sheet?
+Its a data frame with at minimum, 5 columns: name, group, subgroup, category, and type. name contains the column names of your data. Essentialy, this sheet links each column in your data with how it should be grouped/organized as well as it's type.
+For example:
+name | group | subgroup | category | type
+------------ | -------------| -------------| -------------| -------------
+Q1 | G1 | Null | c1 | numeric
+Q2 | G2 | Alt | c2 | numeric
+
+#### Can I have some subgroups in one group and 
 
 ### How is the data grouped?
 
